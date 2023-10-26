@@ -1,0 +1,85 @@
+[gd_scene load_steps=10 format=3 uid="uid://dd5dhlsq1t2je"]
+
+[ext_resource type="Script" path="res://Src/Level.gd" id="1_3vgan"]
+[ext_resource type="PackedScene" uid="uid://dki31ffil5v8c" path="res://Src/walls.tscn" id="1_smjet"]
+[ext_resource type="PackedScene" uid="uid://ihg55vt003ka" path="res://Scenes/paddle.tscn" id="2_2xnbw"]
+[ext_resource type="PackedScene" uid="uid://1mcvg1k3c0y8" path="res://Scenes/opponent.tscn" id="3_e0xjb"]
+[ext_resource type="Texture2D" uid="uid://djvxkdlat8axt" path="res://Assets/background.jpg" id="4_633k7"]
+[ext_resource type="PackedScene" uid="uid://dkxmc267nqtpg" path="res://Scenes/ball.tscn" id="5_q5xoi"]
+[ext_resource type="Script" path="res://Src/ball.gd" id="6_2av5w"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3yq6t"]
+size = Vector2(20, 1230)
+
+[sub_resource type="GDScript" id="GDScript_6akag"]
+script/source = "extends Label
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_3vgan")
+
+[node name="Walls" parent="." instance=ExtResource("1_smjet")]
+scale = Vector2(1.65, 1.65)
+
+[node name="Paddle" parent="." instance=ExtResource("2_2xnbw")]
+position = Vector2(-850, 0)
+scale = Vector2(1.65, 1.65)
+
+[node name="Opponent" parent="." instance=ExtResource("3_e0xjb")]
+position = Vector2(850, 0)
+scale = Vector2(1.65, 1.65)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Background" type="Sprite2D" parent="."]
+modulate = Color(0.223529, 0.223529, 0.223529, 1)
+show_behind_parent = true
+light_mask = 0
+texture = ExtResource("4_633k7")
+
+[node name="Ball" parent="." instance=ExtResource("5_q5xoi")]
+position = Vector2(-342, -180)
+scale = Vector2(0.15, 0.15)
+script = ExtResource("6_2av5w")
+
+[node name="Left" type="Area2D" parent="."]
+position = Vector2(-1000, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Left"]
+shape = SubResource("RectangleShape2D_3yq6t")
+
+[node name="Right" type="Area2D" parent="."]
+position = Vector2(1000, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Right"]
+shape = SubResource("RectangleShape2D_3yq6t")
+
+[node name="PlayerScore" type="Label" parent="."]
+offset_left = -452.0
+offset_top = -526.0
+offset_right = -40.0
+offset_bottom = -387.0
+theme_override_font_sizes/font_size = 100
+text = "0"
+script = SubResource("GDScript_6akag")
+
+[node name="OpponentScore" type="Label" parent="."]
+offset_left = 464.0
+offset_top = -518.0
+offset_right = 521.0
+offset_bottom = -381.0
+theme_override_font_sizes/font_size = 100
+text = "0"
+
+[connection signal="body_entered" from="Left" to="." method="_on_left_body_entered"]
+[connection signal="body_entered" from="Right" to="." method="_on_right_body_entered"]
